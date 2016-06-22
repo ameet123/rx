@@ -159,6 +159,8 @@ public class ComposableListExercisesTest {
     public void testExercise18() {
         System.out.println("----------- testExercise18 ----------------");
         ComposableList<Map<Integer, String>> e = ComposableListExercises.exercise18();
+        System.out.println("Size="+e.size());
+        e.forEach(System.out::println);
         ComposableList<Map<Integer, String>> s = ComposableListSolutions.exercise18();
         assertMatch(e, s);
     }

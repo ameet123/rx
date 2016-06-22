@@ -186,42 +186,33 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             }
         });
         return highRatedVideos;
-//        throw new UnsupportedOperationException("Not implemented yet.");
     }
     /*
     Exercise 7: Implement filter()
-
-        Notice that every filter operation shares some operations in common:
-
-        1. Traverse the list
-        2. Add objects that pass a test to a new list
-
-        Why not create a helper function for this common pattern?
-
-        The filter() method accepts a Predicate function, applies it to each item in the
-        List, and returns a new List of all of the items for which passed the test.
-        A Predicate is a test function that returns true or false (ex. x -> x > 1).
-
-        ComposableList.of(1,2,3).filter(x -> x > 1) returns ComposableList.of(2,3)
+    Notice that every filter operation shares some operations in common:
+    1. Traverse the list
+    2. Add objects that pass a test to a new list
+    Why not create a helper function for this common pattern?
+    The filter() method accepts a Predicate function, applies it to each item in the
+    List, and returns a new List of all of the items for which passed the test.
+    A Predicate is a test function that returns true or false (ex. x -> x > 1).
+    ComposableList.of(1,2,3).filter(x -> x > 1) returns ComposableList.of(2,3)
     */
     public ComposableList<T> filter(Predicate<T> predicateFunction) {
         ComposableListExercises<T> results = new ComposableListExercises<T>();
         this.forEach(itemInList -> {
 
-            // ------------ INSERT CODE HERE! ----------------------------
-            // Apply the predicateFunction to each item in the list. If the
-            // result is true, add the result to the results list.
-            // Note: you can apply the predicateFunction to a value like this:
-            // predicateFunction.test(5)
-            if (predicateFunction.test(itemInList)) {
-                results.add(itemInList);
-            }
-            // ------------ INSERT CODE HERE! ----------------------------
-
+        // ------------ INSERT CODE HERE! ----------------------------
+        // Apply the predicateFunction to each item in the list. If the
+        // result is true, add the result to the results list.
+        // Note: you can apply the predicateFunction to a value like this:
+        // predicateFunction.test(5)
+        if (predicateFunction.test(itemInList)) {
+            results.add(itemInList);
+        }
+        // ------------ INSERT CODE HERE! ----------------------------
         });
-
         return results;
-//        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -458,15 +449,108 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             currentSize = boxart.width * boxart.height;
             if (currentSize > maxSize) {
                 // ****** INSERT CODE HERE ********
+                maxSize = currentSize;
+                largestBoxart = boxart;
                 // Assign the largestBoxart to the current boxart, and assign the maxSize to the currentSize.
                 // ****** INSERT CODE HERE ********
             }
         }
 
-        // return largestBoxart;
-        throw new UnsupportedOperationException("Not implemented yet.");
+         return largestBoxart;
+//        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+    /*
+       Exercise 14: Implement reduce()
+
+       Combining the value produced from the last computation with each value until a single value is produced
+       is a very common pattern. Many types of operations require us to process at least two items a time like
+       computing the minimum or the maximum value in a List. Let's create a helper function called reduce() to
+       aggregate a single value from a list of values.
+
+       Reduce recursively combines the results of the last aggregation with the next item in the list until the
+       values in the list are exhausted, and then returns a list containing only the last aggregation value.
+       Reduce uses the first value in the list as the initial aggregation value. For example
+       ComposableList.of(1,2,3).reduce((acc,curr) -> acc + curr) is structurally equivalent to ComposableList.of(6).
+       In the previous example, theBinary function is invoked three times.
+
+       The first time the binary lambda function is invoked the accumulated value acc is 1 (the first value in the
+       list) and the current value curr is 2 (the second value in the list). The next time the binary lambda function
+       is invoked, the accumulated value is the result of the previous function invocation (3) and the current value
+       is the next value in the list (3).
+        */
+    public ComposableList<T> reduce(BiFunction<T, T, T> combiner) {
+        int counter = 1;
+        T accumulatedValue = null;
+
+        // If the list is empty, return this
+        if (this.size() == 0) {
+            // ************ INSERT CODE HERE **************
+            //  if the list is empty, return this
+            return this;
+            // ********************************************
+        } else {
+            accumulatedValue = this.get(0);
+
+            // Loop through the list, feeding the current value and the result of
+            // the previous computation back into the combiner function until
+            // we've exhausted the entire list and are left with only one function.
+            while (counter < this.size()) {
+                // ****** INSERT CODE HERE ********
+                accumulatedValue = combiner.apply(accumulatedValue, this.get(counter));
+                // Set accumulatedValue to the result of passing accumulatedValue and the list value at the
+                // counter index to the combiner function.
+                // ****** INSERT CODE HERE ********
+
+                counter++;
+            }
+
+            return ComposableListExercises.of(accumulatedValue);
+        }
     }
 
+    /*
+    Exercise 15: Implement a reduce overload that accepts an initial value
+
+    Sometimes when we reduce a list, we want the final reduced value to be a different type than the items
+    stored in the list. For example, let's say we have a list of videos and we want to reduce them to a
+    single map where the key is the video id and the value is the video's title.
+
+    This overload of reduce accepts a initial value, which is used as the accumulated value the first time
+    the binary function is run instead of the first item in the List. Just as in the previous implementation
+    of reduce, the results of the previous function invocation and the current item in the list are passed
+    to the binary function recursively until there are no more items in the list to reduce. Finally The
+    reduce method produces a list containing only a single reduced value. Note that binary function will
+    always return the same type as the initial accumulated value.
+
+    ComposableList
+        .of(
+            1,
+            2,
+            3)
+        .reduce(10, (acc, curr) -> acc + curr) is structurally equivalent to ComposableList.of(16).
+    */
+    public <R> ComposableList<R> reduce(R initialValue, BiFunction<R, T, R> combiner) {
+        int counter;
+        R accumulatedValue;
+
+        // If the list is empty, do nothing
+        if (this.size() == 0) {
+            return new ComposableListExercises<R>();
+        } else {
+            counter = 0;
+            accumulatedValue = initialValue;
+
+            // Loop through the list, feeding the current value and the result of
+            // the previous computation back into the combiner function until
+            // we've exhausted the entire list and are left with only one function.
+            while (counter < this.size()) {
+                accumulatedValue = combiner.apply(accumulatedValue, this.get(counter));
+                counter++;
+            }
+
+            return ComposableListExercises.of(accumulatedValue);
+        }
+    }
     /*
     Exercise 16: Retrieve the largest rating.
 
@@ -478,9 +562,7 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
         // returns a list with one item.
 
         // complete the expression below
-        //return ratings.reduce
-
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return ratings.reduce((integer, integer2) -> integer2>integer?integer2:integer);
     }
 
     /*
@@ -499,8 +581,10 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
 
         // You should return a list containing only the largest box art. Remember that reduce always
         // returns a list with one item.
-        // return boxarts.reduce
-        throw new UnsupportedOperationException("Not implemented yet.");
+         return boxarts.reduce((boxArt, boxArt2) ->
+                 boxArt.width*boxArt.height>boxArt2.height*boxArt2.width?boxArt:boxArt2).
+                 map(boxArt -> boxArt.url);
+//        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     /*
@@ -551,6 +635,8 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                         // the list.
                         new HashMap<Integer, String>(),
                         (accumulatedMap, video) -> {
+                            accumulatedMap.put(video.id, video.title);
+                            return accumulatedMap;
                             // ************ INSERT CODE HERE ************
                             // Remember that you the functions passed to map, filter, concatMap, reduce, and zip can
                             // only
@@ -566,7 +652,7 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                             // the copy,
                             // and return the copy.
                             // ************ INSERT CODE HERE ************
-                            throw new UnsupportedOperationException("Not implemented yet.");
+//                            throw new UnsupportedOperationException("Not implemented yet.");
                         });
     }
 
@@ -958,96 +1044,5 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
 //        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    /*
-    Exercise 14: Implement reduce()
 
-    Combining the value produced from the last computation with each value until a single value is produced
-    is a very common pattern. Many types of operations require us to process at least two items a time like
-    computing the minimum or the maximum value in a List. Let's create a helper function called reduce() to
-    aggregate a single value from a list of values.
-
-    Reduce recursively combines the results of the last aggregation with the next item in the list until the
-    values in the list are exhausted, and then returns a list containing only the last aggregation value.
-    Reduce uses the first value in the list as the initial aggregation value. For example
-    ComposableList.of(1,2,3).reduce((acc,curr) -> acc + curr) is structurally equivalent to ComposableList.of(6).
-    In the previous example, theBinary function is invoked three times.
-
-    The first time the binary lambda function is invoked the accumulated value acc is 1 (the first value in the
-    list) and the current value curr is 2 (the second value in the list). The next time the binary lambda function
-    is invoked, the accumulated value is the result of the previous function invocation (3) and the current value
-    is the next value in the list (3).
-     */
-    public ComposableList<T> reduce(BiFunction<T, T, T> combiner) {
-        int counter = 1;
-        T accumulatedValue = null;
-
-        // If the list is empty, return this
-        if (this.size() == 0) {
-            // ************ INSERT CODE HERE **************
-            //  if the list is empty, return this
-            // ********************************************
-        } else {
-            accumulatedValue = this.get(0);
-
-            // Loop through the list, feeding the current value and the result of
-            // the previous computation back into the combiner function until
-            // we've exhausted the entire list and are left with only one function.
-            while (counter < this.size()) {
-                // ****** INSERT CODE HERE ********
-                // Set accumulatedValue to the result of passing accumulatedValue and the list value at the
-                // counter index to the combiner function.
-                // ****** INSERT CODE HERE ********
-
-                counter++;
-            }
-
-            //return ComposableListExercises.of(accumulatedValue);
-        }
-
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /*
-    Exercise 15: Implement a reduce overload that accepts an initial value
-
-    Sometimes when we reduce a list, we want the final reduced value to be a different type than the items
-    stored in the list. For example, let's say we have a list of videos and we want to reduce them to a
-    single map where the key is the video id and the value is the video's title.
-
-    This overload of reduce accepts a initial value, which is used as the accumulated value the first time
-    the binary function is run instead of the first item in the List. Just as in the previous implementation
-    of reduce, the results of the previous function invocation and the current item in the list are passed
-    to the binary function recursively until there are no more items in the list to reduce. Finally The
-    reduce method produces a list containing only a single reduced value. Note that binary function will
-    always return the same type as the initial accumulated value.
-
-    ComposableList
-        .of(
-            1,
-            2,
-            3)
-        .reduce(10, (acc, curr) -> acc + curr) is structurally equivalent to ComposableList.of(16).
-    */
-    public <R> ComposableList<R> reduce(R initialValue, BiFunction<R, T, R> combiner) {
-        int counter;
-        R accumulatedValue;
-
-        // If the list is empty, do nothing
-        if (this.size() == 0) {
-            return new ComposableListExercises<R>();
-        } else {
-            counter = 0;
-            accumulatedValue = initialValue;
-
-            // Loop through the list, feeding the current value and the result of
-            // the previous computation back into the combiner function until
-            // we've exhausted the entire list and are left with only one function.
-            while (counter < this.size()) {
-                accumulatedValue = combiner.apply(accumulatedValue, this.get(counter));
-                counter++;
-            }
-
-            return ComposableListExercises.of(accumulatedValue);
-        }
-    }
 }
