@@ -93,7 +93,39 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
 
         return videoAndTitlePairs;
     }
+    /*
+    Exercise 4: Implement map() to help with list projection
 
+      All list projections share two operations in common:
+
+      1. Traverse the source list
+      2. Add each item's projected value to a new list
+
+      Why not create a helper method for these common operations?
+
+      If our ComposableList had a map() method, it would make projections easier.
+      The map method accepts the projection function to be applied to each item
+      in the source List, and returns a List of the projected results.
+
+      ComposableList.of(1,2,3).map(x -> x + 1) is equivalent to ComposableList.of(2,3,4)
+
+      Finish the implementation of ComposableList's map method below:
+    */
+    public <R> ComposableList<R> map(Function<T, R> projectionFunction) {
+        ComposableListExercises<R> results = new ComposableListExercises<R>();
+        this.forEach(itemInList -> {
+            // ------------ INSERT CODE HERE! ----------------------------
+            results.add(projectionFunction.apply(itemInList));
+            // Apply the projectionFunction to each item in the list and add
+            // each result to the results list.
+            // Note that you can apply a projectionFunction to a value like this:
+            //  projectionFunction.apply(5)
+            // ------------ INSERT CODE HERE! ----------------------------
+        });
+
+        return results;
+//        throw new UnsupportedOperationException("Not implemented yet.");
+    }
     /*
     Exercise 5: Use map() to project a ComposableList of videos into a stream of {id,title} JSON
 
@@ -154,6 +186,41 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
             }
         });
         return highRatedVideos;
+//        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+    /*
+    Exercise 7: Implement filter()
+
+        Notice that every filter operation shares some operations in common:
+
+        1. Traverse the list
+        2. Add objects that pass a test to a new list
+
+        Why not create a helper function for this common pattern?
+
+        The filter() method accepts a Predicate function, applies it to each item in the
+        List, and returns a new List of all of the items for which passed the test.
+        A Predicate is a test function that returns true or false (ex. x -> x > 1).
+
+        ComposableList.of(1,2,3).filter(x -> x > 1) returns ComposableList.of(2,3)
+    */
+    public ComposableList<T> filter(Predicate<T> predicateFunction) {
+        ComposableListExercises<T> results = new ComposableListExercises<T>();
+        this.forEach(itemInList -> {
+
+            // ------------ INSERT CODE HERE! ----------------------------
+            // Apply the predicateFunction to each item in the list. If the
+            // result is true, add the result to the results list.
+            // Note: you can apply the predicateFunction to a value like this:
+            // predicateFunction.test(5)
+            if (predicateFunction.test(itemInList)) {
+                results.add(itemInList);
+            }
+            // ------------ INSERT CODE HERE! ----------------------------
+
+        });
+
+        return results;
 //        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
@@ -844,75 +911,8 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
     create a {"videoId" : videoId, "bookmarkId" : bookmarkId} JSON pair.
     */
 
-    /*
-    Exercise 4: Implement map() to help with list projection
 
-    All list projections share two operations in common:
 
-    1. Traverse the source list
-    2. Add each item's projected value to a new list
-
-    Why not create a helper method for these common operations?
-
-    If our ComposableList had a map() method, it would make projections easier.
-    The map method accepts the projection function to be applied to each item
-    in the source List, and returns a List of the projected results.
-
-    ComposableList.of(1,2,3).map(x -> x + 1) is equivalent to ComposableList.of(2,3,4)
-
-    Finish the implementation of ComposableList's map method below:
-     */
-    public <R> ComposableList<R> map(Function<T, R> projectionFunction) {
-        ComposableListExercises<R> results = new ComposableListExercises<R>();
-        this.forEach(itemInList -> {
-            // ------------ INSERT CODE HERE! ----------------------------
-            results.add(projectionFunction.apply(itemInList));
-            // Apply the projectionFunction to each item in the list and add
-            // each result to the results list.
-            // Note that you can apply a projectionFunction to a value like this:
-            //  projectionFunction.apply(5)
-            // ------------ INSERT CODE HERE! ----------------------------
-        });
-
-        return results;
-//        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    /*
-    Exercise 7: Implement filter()
-
-    Notice that every filter operation shares some operations in common:
-
-    1. Traverse the list
-    2. Add objects that pass a test to a new list
-
-    Why not create a helper function for this common pattern?
-
-    The filter() method accepts a Predicate function, applies it to each item in the
-    List, and returns a new List of all of the items for which passed the test.
-    A Predicate is a test function that returns true or false (ex. x -> x > 1).
-
-    ComposableList.of(1,2,3).filter(x -> x > 1) returns ComposableList.of(2,3)
-     */
-    public ComposableList<T> filter(Predicate<T> predicateFunction) {
-        ComposableListExercises<T> results = new ComposableListExercises<T>();
-        this.forEach(itemInList -> {
-
-            // ------------ INSERT CODE HERE! ----------------------------
-            // Apply the predicateFunction to each item in the list. If the
-            // result is true, add the result to the results list.
-            // Note: you can apply the predicateFunction to a value like this:
-            // predicateFunction.test(5)
-            if (predicateFunction.test(itemInList)) {
-                results.add(itemInList);
-            }
-            // ------------ INSERT CODE HERE! ----------------------------
-
-        });
-
-        return results;
-//        throw new UnsupportedOperationException("Not implemented yet.");
-    }
 
     /*
     Exercise 10: Implement concatMap()
