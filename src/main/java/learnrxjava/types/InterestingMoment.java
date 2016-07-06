@@ -13,4 +13,5 @@ public class InterestingMoment {
         this.type = type;
         this.time = time;
     }
+
 }

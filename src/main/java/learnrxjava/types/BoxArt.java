@@ -42,5 +42,12 @@ public class BoxArt {
         return true;
     }
 
-
+    @Override
+    public String toString() {
+        return "BoxArt{" +
+                "width=" + width +
+                ", height=" + height +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }
