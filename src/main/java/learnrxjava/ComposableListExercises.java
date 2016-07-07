@@ -858,16 +858,43 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
 //                (interestingMoment, boxArt) -> json("time", interestingMoment.time, "url", boxArt.url));
 
         // Iteration - 5
-        ComposableList<JSON> e = ComposableListExercises.zip(movieLists.concatMap(movieList ->
-                        movieList.videos.concatMap(video ->
-                                video.interestingMoments.filter
-                                        (interestingMoment -> interestingMoment.type.equals("Middle")))),
-                movieLists.concatMap(movieList ->
-                        movieList.videos.concatMap(video ->
-                                video.boxarts.reduce(
-                                        (boxArt, boxArt2) ->
-                                                boxArt.width*boxArt.height>boxArt2.width*boxArt2.height?boxArt2:boxArt))),
-                (interestingMoment, boxArt) -> json("time", interestingMoment.time, "url", boxArt.url));
+//        ComposableList<JSON> e = ComposableListExercises.zip(movieLists.concatMap(movieList ->
+//                        movieList.videos.concatMap(video ->
+//                                video.interestingMoments.filter
+//                                        (interestingMoment -> interestingMoment.type.equals("Middle")))),
+//                movieLists.concatMap(movieList ->
+//                        movieList.videos.concatMap(video ->
+//                                video.boxarts.reduce(
+//                                        (boxArt, boxArt2) ->
+//                                                boxArt.width*boxArt.height>boxArt2.width*boxArt2
+// .height?boxArt2:boxArt))),
+//                (interestingMoment, boxArt) -> json("time", interestingMoment.time, "url", boxArt.url));
+        // Iteration 6
+//        ComposableList<Video> e =
+//                movieLists.concatMap(
+//                        movieList -> movieList.videos);
+
+        // Iteration - 7
+        ComposableList<JSON> e = ComposableListExercises.zip(
+                movieLists.concatMap(
+                        movieList -> movieList.videos),
+                // merge of boxart and intersting moment into "json"
+                ComposableListExercises.zip(
+                        movieLists.concatMap(movieList ->
+                                movieList.videos.concatMap(video ->
+                                        video.boxarts.reduce(
+                                                (boxArt, boxArt2) ->
+                                                        boxArt.width * boxArt.height > boxArt2.width * boxArt2.height
+                                                                ? boxArt2 : boxArt))),
+                        movieLists.concatMap(movieList ->
+                                movieList.videos.concatMap(video ->
+                                        video.interestingMoments.filter
+                                                (interestingMoment -> interestingMoment.type.equals("Middle")))),
+                        (boxArt, interestingMoment) -> json("url", boxArt.url, "time", interestingMoment.time)),
+                // tricky - merge elements of json into video
+                (video, json) ->
+                        json("id", video.id, "title", video.title, "url", json.get("url"), "time", json.get("time")));
+
         e.forEach(System.out::println);
         return null;
 //        throw new UnsupportedOperationException("Not implemented yet.");
