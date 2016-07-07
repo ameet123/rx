@@ -896,7 +896,7 @@ public class ComposableListExercises<T> extends ArrayList<T> implements Composab
                         json("id", video.id, "title", video.title, "url", json.get("url"), "time", json.get("time")));
 
         e.forEach(System.out::println);
-        return null;
+        return e;
 //        throw new UnsupportedOperationException("Not implemented yet.");
     }
 

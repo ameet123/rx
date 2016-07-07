@@ -206,8 +206,8 @@ public class ComposableListExercisesTest {
     public void testExercise23() {
         System.out.println("----------- testExercise23 ----------------");
         ComposableList<JSON> e = ComposableListExercises.exercise23();
-//        ComposableList<JSON> s = ComposableListSolutions.exercise23();
-//        assertMatch(e, s);
+        ComposableList<JSON> s = ComposableListSolutions.exercise23();
+        assertMatch(e, s);
     }
 
     private void assertMatch(ComposableList<? extends Object> e, ComposableList<? extends Object> s) {
